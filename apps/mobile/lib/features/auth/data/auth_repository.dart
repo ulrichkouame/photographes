@@ -32,7 +32,7 @@ class AuthRepository {
     if (userId == null) throw Exception('Utilisateur non connecté');
     // Store hashed pin representation (simple base64 for demo; use bcrypt in prod)
     final pinHash = _hashPin(pin);
-    await _client.from('profiles').upsert({
+    await _client.from('photographes_profiles').upsert({
       'id': userId,
       'pin_hash': pinHash,
       'updated_at': DateTime.now().toIso8601String(),
@@ -44,7 +44,7 @@ class AuthRepository {
     final userId = _client.auth.currentUser?.id;
     if (userId == null) return false;
     final data = await _client
-        .from('profiles')
+        .from('photographes_profiles')
         .select('pin_hash')
         .eq('id', userId)
         .maybeSingle();

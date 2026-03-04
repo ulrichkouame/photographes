@@ -39,7 +39,7 @@ final _notificationsProvider =
   final userId = Supabase.instance.client.auth.currentUser?.id;
   if (userId == null) return [];
   final data = await Supabase.instance.client
-      .from('notifications')
+      .from('photographes_notifications')
       .select()
       .eq('user_id', userId)
       .order('created_at', ascending: false)

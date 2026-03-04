@@ -18,7 +18,7 @@ class PhotographerRepository {
     int pageSize = 20,
   }) async {
     var query = _client
-        .from('profiles')
+        .from('photographes_profiles')
         .select()
         .eq('role', 'PHOTOGRAPHE');
 
@@ -47,7 +47,7 @@ class PhotographerRepository {
   /// Returns a single photographer by [id].
   Future<PhotographerModel?> getPhotographerById(String id) async {
     final response = await _client
-        .from('profiles')
+        .from('photographes_profiles')
         .select()
         .eq('id', id)
         .maybeSingle();

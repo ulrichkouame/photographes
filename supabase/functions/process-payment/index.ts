@@ -229,7 +229,7 @@ serve(async (req: Request) => {
 
   // Vérifier l'unicité de la référence
   const { data: existingTx } = await supabase
-    .from("payment_transactions")
+    .from("photographes_payments")
     .select("id, status")
     .eq("reference", body.reference)
     .maybeSingle();
@@ -272,7 +272,7 @@ serve(async (req: Request) => {
 
   // Enregistrer la transaction en statut pending
   const { data: transaction, error: txError } = await supabase
-    .from("payment_transactions")
+    .from("photographes_payments")
     .insert({
       reference: body.reference,
       amount: body.amount,
@@ -316,7 +316,7 @@ serve(async (req: Request) => {
   } catch (err) {
     // Marquer la transaction comme échouée
     await supabase
-      .from("payment_transactions")
+      .from("photographes_payments")
       .update({ status: "failed", updated_at: new Date().toISOString() })
       .eq("id", transaction.id);
 
@@ -333,7 +333,7 @@ serve(async (req: Request) => {
 
   // Mettre à jour la transaction avec la référence du provider
   await supabase
-    .from("payment_transactions")
+    .from("photographes_payments")
     .update({
       status: result.status,
       provider_reference: result.providerReference,

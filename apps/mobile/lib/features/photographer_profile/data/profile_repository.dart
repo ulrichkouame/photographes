@@ -16,7 +16,7 @@ class ProfileRepository {
   /// Fetches a photographer's full profile by [id].
   Future<PhotographerModel?> getProfile(String id) async {
     final data = await _client
-        .from('profiles')
+        .from('photographes_profiles')
         .select()
         .eq('id', id)
         .maybeSingle();
@@ -27,7 +27,7 @@ class ProfileRepository {
   /// Returns portfolio photos for the photographer [photographerId].
   Future<List<PortfolioPhoto>> getPortfolioPhotos(String photographerId) async {
     final data = await _client
-        .from('portfolio_photos')
+        .from('photographes_portfolio_photos')
         .select()
         .eq('photographer_id', photographerId)
         .order('sort_order');
@@ -39,7 +39,7 @@ class ProfileRepository {
   /// Returns reviews for the photographer [photographerId].
   Future<List<Review>> getReviews(String photographerId) async {
     final data = await _client
-        .from('reviews')
+        .from('photographes_reviews')
         .select()
         .eq('photographer_id', photographerId)
         .order('created_at', ascending: false);
@@ -51,7 +51,7 @@ class ProfileRepository {
   /// Returns dates when the photographer is available.
   Future<List<DateTime>> getAvailableDates(String photographerId) async {
     final data = await _client
-        .from('availability')
+        .from('photographes_availability')
         .select('date')
         .eq('photographer_id', photographerId)
         .eq('is_available', true);

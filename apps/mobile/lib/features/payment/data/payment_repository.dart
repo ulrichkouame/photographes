@@ -42,7 +42,7 @@ class PaymentRepository {
 
     // Record in Supabase
     final record = await _client
-        .from('payments')
+        .from('photographes_payments')
         .insert({
           'booking_id': bookingId,
           'amount': amount,
@@ -61,7 +61,7 @@ class PaymentRepository {
   /// Returns the payment associated with [bookingId].
   Future<PaymentModel?> getPaymentForBooking(String bookingId) async {
     final data = await _client
-        .from('payments')
+        .from('photographes_payments')
         .select()
         .eq('booking_id', bookingId)
         .order('created_at', ascending: false)

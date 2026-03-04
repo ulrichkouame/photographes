@@ -83,7 +83,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     String phone = '';
     try {
       final data = await Supabase.instance.client
-          .from('profiles')
+          .from('photographes_profiles')
           .select('phone')
           .eq('id', widget.otherUserId)
           .maybeSingle();

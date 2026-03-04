@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/server'
 export default async function AdminClientsPage() {
   const supabase = await createClient()
   const { data: clients } = await supabase
-    .from('profiles')
+    .from('photographes_profiles')
     .eq('role', 'client')
     .select('*')
     .order('created_at', { ascending: false })

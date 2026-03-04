@@ -58,7 +58,7 @@ serve(async (req: Request) => {
 
   // Récupérer l'OTP enregistré pour ce numéro
   const { data: otpRecord, error: fetchError } = await supabase
-    .from("otp_verifications")
+    .from("photographes_otp_verifications")
     .select("*")
     .eq("phone", phone)
     .eq("verified", false)
@@ -74,7 +74,7 @@ serve(async (req: Request) => {
 
   // Vérifier l'expiration
   if (isExpired(otpRecord.expires_at)) {
-    await supabase.from("otp_verifications").delete().eq("phone", phone);
+    await supabase.from("photographes_otp_verifications").delete().eq("phone", phone);
     return errorResponse(
       "Le code OTP a expiré. Veuillez en demander un nouveau.",
       410,
@@ -93,7 +93,7 @@ serve(async (req: Request) => {
 
   // Marquer l'OTP comme vérifié
   await supabase
-    .from("otp_verifications")
+    .from("photographes_otp_verifications")
     .update({ verified: true, updated_at: new Date().toISOString() })
     .eq("phone", phone);
 

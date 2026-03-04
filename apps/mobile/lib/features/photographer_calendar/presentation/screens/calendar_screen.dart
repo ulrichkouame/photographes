@@ -14,7 +14,7 @@ final _availabilityProvider =
   final userId = Supabase.instance.client.auth.currentUser?.id;
   if (userId == null) return {};
   final data = await Supabase.instance.client
-      .from('availability')
+      .from('photographes_availability')
       .select('date')
       .eq('photographer_id', userId)
       .eq('is_available', true);
@@ -55,13 +55,13 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
 
     if (_available.contains(d)) {
       await Supabase.instance.client
-          .from('availability')
+          .from('photographes_availability')
           .delete()
           .eq('photographer_id', userId)
           .eq('date', DateFormat('yyyy-MM-dd').format(d));
       setState(() => _available.remove(d));
     } else {
-      await Supabase.instance.client.from('availability').upsert({
+      await Supabase.instance.client.from('photographes_availability').upsert({
         'photographer_id': userId,
         'date': DateFormat('yyyy-MM-dd').format(d),
         'is_available': true,

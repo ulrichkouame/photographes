@@ -14,10 +14,10 @@ export default async function AdminDashboardPage() {
     { count: bookingsCount },
     { data: payments },
   ] = await Promise.all([
-    supabase.from('photographers').select('*', { count: 'exact', head: true }),
-    supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'client'),
-    supabase.from('bookings').select('*', { count: 'exact', head: true }),
-    supabase.from('payments').select('id,amount,created_at,status,operator').eq('status', 'completed').order('created_at', { ascending: false }).limit(5),
+    supabase.from('photographes_photographers').select('*', { count: 'exact', head: true }),
+    supabase.from('photographes_profiles').select('*', { count: 'exact', head: true }).eq('role', 'client'),
+    supabase.from('photographes_bookings').select('*', { count: 'exact', head: true }),
+    supabase.from('photographes_payments').select('id,amount,created_at,status,operator').eq('status', 'completed').order('created_at', { ascending: false }).limit(5),
   ])
 
   const totalRevenue = (payments ?? []).reduce((sum, p) => sum + (p.amount ?? 0), 0)
@@ -26,7 +26,7 @@ export default async function AdminDashboardPage() {
   const sixMonthsAgo = new Date()
   sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6)
   const { data: allPayments } = await supabase
-    .from('payments')
+    .from('photographes_payments')
     .select('amount,created_at')
     .eq('status', 'completed')
     .gte('created_at', sixMonthsAgo.toISOString())

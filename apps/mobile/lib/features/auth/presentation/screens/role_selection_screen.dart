@@ -33,7 +33,7 @@ class _RoleSelectionScreenState extends ConsumerState<RoleSelectionScreen> {
     try {
       final userId = Supabase.instance.client.auth.currentUser?.id;
       if (userId != null) {
-        await Supabase.instance.client.from('profiles').upsert({
+        await Supabase.instance.client.from('photographes_profiles').upsert({
           'id': userId,
           'role': _selectedRole,
           'updated_at': DateTime.now().toIso8601String(),

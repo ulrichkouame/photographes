@@ -18,7 +18,7 @@ export default async function PhotographerProfilePage({ params }: Props) {
 
   // Recherche par id OU par slug (nom converti en slug)
   const { data: photographer } = await supabase
-    .from('photographer_profiles')
+    .from('photographes_photographer_profiles')
     .select('*')
     .or(`id.eq.${slug},full_name.ilike.${slug.replace(/-/g, ' ')}`)
     .single()
@@ -26,7 +26,7 @@ export default async function PhotographerProfilePage({ params }: Props) {
   if (!photographer) notFound()
 
   const { data: portfolio } = await supabase
-    .from('portfolio_photos')
+    .from('photographes_portfolio_photos')
     .select('*')
     .eq('photographer_id', photographer.id)
     .order('sort_order', { ascending: true })

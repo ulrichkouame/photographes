@@ -77,7 +77,7 @@ serve(async (req: Request) => {
 
   // Stocker l'OTP en base (invalider les précédents pour ce numéro)
   const { error: upsertError } = await supabase
-    .from("otp_verifications")
+    .from("photographes_otp_verifications")
     .upsert(
       {
         phone,
@@ -128,7 +128,7 @@ serve(async (req: Request) => {
 
   if (sendError) {
     // Supprimer l'OTP enregistré si l'envoi a échoué
-    await supabase.from("otp_verifications").delete().eq("phone", phone);
+    await supabase.from("photographes_otp_verifications").delete().eq("phone", phone);
     return errorResponse(sendError, 502, "SEND_ERROR");
   }
 

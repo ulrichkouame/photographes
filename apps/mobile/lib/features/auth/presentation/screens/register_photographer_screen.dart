@@ -46,7 +46,7 @@ class _RegisterPhotographerScreenState
     try {
       final userId = Supabase.instance.client.auth.currentUser?.id;
       if (userId != null) {
-        await Supabase.instance.client.from('profiles').upsert({
+        await Supabase.instance.client.from('photographes_profiles').upsert({
           'id': userId,
           'full_name': _nameController.text.trim(),
           'bio': _bioController.text.trim(),

@@ -32,7 +32,7 @@ class DashboardRepository {
     if (userId == null) throw Exception('Non authentifié');
 
     final bookings = await _client
-        .from('bookings')
+        .from('photographes_bookings')
         .select()
         .eq('photographer_id', userId);
 
@@ -55,7 +55,7 @@ class DashboardRepository {
 
     // Fetch average rating from profile
     final profile = await _client
-        .from('profiles')
+        .from('photographes_profiles')
         .select('average_rating')
         .eq('id', userId)
         .maybeSingle();

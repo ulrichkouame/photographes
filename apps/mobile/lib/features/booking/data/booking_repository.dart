@@ -23,7 +23,7 @@ class BookingRepository {
     if (userId == null) throw Exception('Non authentifié');
 
     final data = await _client
-        .from('bookings')
+        .from('photographes_bookings')
         .insert({
           'client_id': userId,
           'photographer_id': photographerId,
@@ -44,7 +44,7 @@ class BookingRepository {
   /// Returns a single booking by [id].
   Future<BookingModel?> getBooking(String id) async {
     final data = await _client
-        .from('bookings')
+        .from('photographes_bookings')
         .select()
         .eq('id', id)
         .maybeSingle();
@@ -60,7 +60,7 @@ class BookingRepository {
     final userId = _client.auth.currentUser?.id;
     if (userId == null) return [];
     final data = await _client
-        .from('bookings')
+        .from('photographes_bookings')
         .select()
         .eq('client_id', userId)
         .order('created_at', ascending: false)
@@ -75,7 +75,7 @@ class BookingRepository {
     final userId = _client.auth.currentUser?.id;
     if (userId == null) return [];
     final data = await _client
-        .from('bookings')
+        .from('photographes_bookings')
         .select()
         .eq('photographer_id', userId)
         .order('created_at', ascending: false);
@@ -87,7 +87,7 @@ class BookingRepository {
   /// Updates the booking [id] status to [newStatus].
   Future<void> updateStatus(String id, String newStatus) async {
     await _client
-        .from('bookings')
+        .from('photographes_bookings')
         .update({'status': newStatus})
         .eq('id', id);
   }

@@ -36,7 +36,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     final userId = Supabase.instance.client.auth.currentUser?.id;
     if (userId == null) return;
     final data = await Supabase.instance.client
-        .from('profiles')
+        .from('photographes_profiles')
         .select()
         .eq('id', userId)
         .maybeSingle();
@@ -53,7 +53,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     try {
       final userId = Supabase.instance.client.auth.currentUser?.id;
       if (userId != null) {
-        await Supabase.instance.client.from('profiles').update({
+        await Supabase.instance.client.from('photographes_profiles').update({
           'full_name': _nameController.text.trim(),
           'updated_at': DateTime.now().toIso8601String(),
         }).eq('id', userId);

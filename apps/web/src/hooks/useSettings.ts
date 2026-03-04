@@ -35,7 +35,7 @@ export function useSettings() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
       const { data, error } = await supabase
-        .from('app_settings')
+        .from('photographes_app_settings')
         .select('*')
         .eq('user_id', user.id)
         .single()
@@ -56,7 +56,7 @@ export function useSettings() {
     if (!user) return { error: new Error('Non authentifié') }
 
     const { error } = await supabase
-      .from('app_settings')
+      .from('photographes_app_settings')
       .upsert({ user_id: user.id, ...patch }, { onConflict: 'user_id' })
     if (!error) await fetchSettings()
     return { error }

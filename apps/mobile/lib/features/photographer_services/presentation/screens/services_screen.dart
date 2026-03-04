@@ -13,7 +13,7 @@ final _servicesProvider =
   final userId = Supabase.instance.client.auth.currentUser?.id;
   if (userId == null) return [];
   final data = await Supabase.instance.client
-      .from('services')
+      .from('photographes_services')
       .select()
       .eq('photographer_id', userId)
       .order('created_at');
@@ -88,7 +88,7 @@ class ServicesScreen extends ConsumerWidget {
                 },
                 onDismissed: (_) async {
                   await Supabase.instance.client
-                      .from('services')
+                      .from('photographes_services')
                       .delete()
                       .eq('id', service.id);
                   ref.invalidate(_servicesProvider);
@@ -201,11 +201,11 @@ class _ServiceFormSheetState extends State<_ServiceFormSheet> {
     try {
       if (widget.existing != null) {
         await Supabase.instance.client
-            .from('services')
+            .from('photographes_services')
             .update(payload)
             .eq('id', widget.existing!.id);
       } else {
-        await Supabase.instance.client.from('services').insert(payload);
+        await Supabase.instance.client.from('photographes_services').insert(payload);
       }
       if (mounted) Navigator.pop(context);
     } catch (e) {

@@ -18,7 +18,7 @@ class ChatRepository {
     final senderId = _client.auth.currentUser?.id;
     if (senderId == null) throw Exception('Non authentifié');
 
-    await _client.from('messages').insert({
+    await _client.from('photographes_messages').insert({
       'room_id': roomId,
       'sender_id': senderId,
       'content': content,
@@ -30,7 +30,7 @@ class ChatRepository {
   /// Returns a real-time stream of messages for [roomId].
   Stream<List<Message>> streamMessages(String roomId) {
     return _client
-        .from('messages')
+        .from('photographes_messages')
         .stream(primaryKey: ['id'])
         .eq('room_id', roomId)
         .order('created_at')
@@ -42,7 +42,7 @@ class ChatRepository {
     final userId = _client.auth.currentUser?.id;
     if (userId == null) return;
     await _client
-        .from('messages')
+        .from('photographes_messages')
         .update({'is_read': true})
         .eq('room_id', roomId)
         .neq('sender_id', userId)
@@ -52,14 +52,14 @@ class ChatRepository {
   /// Ensures a chat room exists for [bookingId]; returns its id.
   Future<String> getOrCreateRoom(String bookingId) async {
     final existing = await _client
-        .from('chat_rooms')
+        .from('photographes_chat_rooms')
         .select('id')
         .eq('booking_id', bookingId)
         .maybeSingle();
     if (existing != null) return existing['id'] as String;
 
     final created = await _client
-        .from('chat_rooms')
+        .from('photographes_chat_rooms')
         .insert({
           'booking_id': bookingId,
           'created_at': DateTime.now().toIso8601String(),

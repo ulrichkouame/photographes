@@ -16,7 +16,7 @@ class PortfolioManagementRepository {
   /// Returns the photographer's portfolio photos ordered by sort_order.
   Future<List<PortfolioPhoto>> getMyPhotos() async {
     final data = await _client
-        .from('portfolio_photos')
+        .from('photographes_portfolio_photos')
         .select()
         .eq('photographer_id', _userId)
         .order('sort_order');
@@ -36,7 +36,7 @@ class PortfolioManagementRepository {
 
     // Determine the next sort_order by reading the current maximum.
     final existing = await _client
-        .from('portfolio_photos')
+        .from('photographes_portfolio_photos')
         .select('sort_order')
         .eq('photographer_id', _userId)
         .order('sort_order', ascending: false)
@@ -45,7 +45,7 @@ class PortfolioManagementRepository {
         (existing as List).isNotEmpty ? ((existing.first['sort_order'] as int?) ?? 0) : 0;
 
     final record = await _client
-        .from('portfolio_photos')
+        .from('photographes_portfolio_photos')
         .insert({
           'photographer_id': _userId,
           'url': url,
@@ -62,7 +62,7 @@ class PortfolioManagementRepository {
 
   /// Deletes a photo by [photoId] from storage and DB.
   Future<void> deletePhoto(String photoId, String url) async {
-    await _client.from('portfolio_photos').delete().eq('id', photoId);
+    await _client.from('photographes_portfolio_photos').delete().eq('id', photoId);
     // Attempt to delete from storage (non-critical)
     try {
       final path = Uri.parse(url).path.split('/portfolio/').last;
@@ -73,7 +73,7 @@ class PortfolioManagementRepository {
   /// Toggles the featured status of a photo.
   Future<void> setFeatured(String photoId, {required bool isFeatured}) async {
     await _client
-        .from('portfolio_photos')
+        .from('photographes_portfolio_photos')
         .update({'is_featured': isFeatured})
         .eq('id', photoId);
   }
@@ -82,7 +82,7 @@ class PortfolioManagementRepository {
   Future<void> reorder(List<PortfolioPhoto> photos) async {
     for (var i = 0; i < photos.length; i++) {
       await _client
-          .from('portfolio_photos')
+          .from('photographes_portfolio_photos')
           .update({'sort_order': i})
           .eq('id', photos[i].id);
     }

@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/server'
 export default async function AdminPaymentsPage() {
   const supabase = await createClient()
   const { data: payments } = await supabase
-    .from('payments')
+    .from('photographes_payments')
     .select('*')
     .order('created_at', { ascending: false })
 

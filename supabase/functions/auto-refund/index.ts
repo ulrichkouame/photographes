@@ -119,7 +119,7 @@ serve(async (req: Request) => {
   // - contact associé avec statut "expired" ou créé il y a plus de 48h sans traitement
   // - pas déjà remboursé (pas de refund_transaction_id)
   const { data: transactions, error: fetchError } = await supabase
-    .from("payment_transactions")
+    .from("photographes_payments")
     .select(
       "id, reference, amount, phone, provider, contact_id, provider_reference",
     )
@@ -150,7 +150,7 @@ serve(async (req: Request) => {
   // Récupérer les contacts associés et filtrer ceux éligibles
   const contactIds = transactions.map((t) => t.contact_id as string);
   const { data: contacts, error: contactsError } = await supabase
-    .from("contacts")
+    .from("photographes_bookings")
     .select("id, status, expires_at, processed_at")
     .in("id", contactIds);
 
@@ -209,7 +209,7 @@ serve(async (req: Request) => {
 
       // Enregistrer le remboursement
       const { data: refundTx } = await supabase
-        .from("payment_transactions")
+        .from("photographes_payments")
         .insert({
           reference: refundRef,
           amount: tx.amount,
@@ -229,7 +229,7 @@ serve(async (req: Request) => {
       if (refundTx) {
         // Mettre à jour la transaction originale
         await supabase
-          .from("payment_transactions")
+          .from("photographes_payments")
           .update({
             status: "refunded",
             refund_transaction_id: refundTx.id,
@@ -239,7 +239,7 @@ serve(async (req: Request) => {
 
         // Mettre à jour le statut du contact
         await supabase
-          .from("contacts")
+          .from("photographes_bookings")
           .update({
             status: "refunded",
             updated_at: new Date().toISOString(),

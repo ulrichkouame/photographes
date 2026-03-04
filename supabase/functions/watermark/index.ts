@@ -259,7 +259,7 @@ serve(async (req: Request) => {
 
   if (body.storage_path) {
     const { data, error } = await supabase.storage
-      .from("photos")
+      .from("photographes_portfolio_photos")
       .download(body.storage_path);
 
     if (error || !data) {

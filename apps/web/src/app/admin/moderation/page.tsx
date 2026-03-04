@@ -9,7 +9,7 @@ import { createClient } from '@/lib/supabase/server'
 export default async function AdminModerationPage() {
   const supabase = await createClient()
   const { data: photographers } = await supabase
-    .from('photographer_profiles')
+    .from('photographes_photographer_profiles')
     .select('*')
     .eq('available', false)
     .order('created_at', { ascending: false })

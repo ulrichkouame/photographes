@@ -55,7 +55,7 @@ serve(async (req: Request) => {
   // GET public = paramètres is_public seulement
   // POST authenticated = tous les paramètres non-secrets
   let query = supabase
-    .from("app_settings")
+    .from("photographes_app_settings")
     .select("key, value, description, is_public, updated_at")
     .order("key");
 

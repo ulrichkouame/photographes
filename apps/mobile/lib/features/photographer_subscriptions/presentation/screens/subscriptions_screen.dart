@@ -69,7 +69,7 @@ final _activeSubscriptionProvider =
   final userId = Supabase.instance.client.auth.currentUser?.id;
   if (userId == null) return null;
   final data = await Supabase.instance.client
-      .from('subscriptions')
+      .from('photographes_subscriptions')
       .select()
       .eq('photographer_id', userId)
       .eq('is_active', true)

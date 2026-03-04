@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
 
   // Utilise la vue photographer_profiles qui agrège profil + note moyenne + compteurs
   let query = supabase
-    .from('photographer_profiles')
+    .from('photographes_photographer_profiles')
     .select('*', { count: 'exact' })
 
   if (search) {

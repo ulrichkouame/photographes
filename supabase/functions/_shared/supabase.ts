@@ -49,7 +49,7 @@ export async function getAppSetting(
   envFallback?: string,
 ): Promise<string | null> {
   const { data, error } = await supabase
-    .from("app_settings")
+    .from("photographes_app_settings")
     .select("value")
     .eq("key", key)
     .single();
