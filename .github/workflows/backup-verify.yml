@@ -1,0 +1,59 @@
+name: Verify Database Backup
+
+on:
+  schedule:
+    # Every Sunday at 05:00 UTC
+    - cron: "0 5 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-backup:
+    name: Restore & Smoke Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install AWS CLI (for R2 access)
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip -q awscliv2.zip
+          sudo ./aws/install --update
+
+      - name: Download latest backup from R2
+        run: |
+          LATEST_KEY=$(aws s3 ls s3://${{ secrets.R2_BUCKET_NAME }}/backups/ \
+            --endpoint-url ${{ secrets.R2_ENDPOINT }} \
+            | sort | tail -1 | awk '{print $4}')
+          echo "Restoring backup: $LATEST_KEY"
+          aws s3 cp "s3://${{ secrets.R2_BUCKET_NAME }}/backups/$LATEST_KEY" backup.sql.gz \
+            --endpoint-url ${{ secrets.R2_ENDPOINT }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+
+      - name: Restore to staging database
+        run: gunzip -c backup.sql.gz | psql "${{ secrets.STAGING_DATABASE_URL }}"
+
+      - name: Run smoke tests
+        run: |
+          psql "${{ secrets.STAGING_DATABASE_URL }}" -c "SELECT COUNT(*) FROM profiles;"
+          psql "${{ secrets.STAGING_DATABASE_URL }}" -c "SELECT COUNT(*) FROM photographers;"
+          psql "${{ secrets.STAGING_DATABASE_URL }}" -c "SELECT COUNT(*) FROM bookings;"
+        env:
+          PGCONNECT_TIMEOUT: "10"
+
+      - name: Notify on failure
+        if: failure()
+        uses: slackapi/slack-github-action@v1.27.0
+        with:
+          payload: |
+            {
+              "text": "⚠️ *Backup verification FAILED* — check GitHub Actions for details.\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_OPS_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

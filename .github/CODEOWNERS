@@ -1,0 +1,29 @@
+# CODEOWNERS — photographes.ci
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+#
+# Order matters: the last matching pattern takes precedence.
+
+# Global fallback — repository maintainers must review everything
+* @ulrichkouame
+
+# Web application (Next.js)
+/apps/web/ @ulrichkouame
+
+# Mobile application (Flutter)
+/apps/mobile/ @ulrichkouame
+
+# Supabase Edge Functions & database migrations
+/supabase/ @ulrichkouame
+
+# Infrastructure & deployment configuration
+/infra/ @ulrichkouame
+railway.toml @ulrichkouame
+*.dockerfile @ulrichkouame
+docker-compose*.yml @ulrichkouame
+
+# CI/CD workflows — must be reviewed by maintainers
+/.github/workflows/ @ulrichkouame
+
+# Security-sensitive files — always require maintainer review
+SECURITY.md @ulrichkouame
+/.github/CODEOWNERS @ulrichkouame
