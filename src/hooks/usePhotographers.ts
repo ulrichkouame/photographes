@@ -23,7 +23,7 @@ export function usePhotographers(initialFilters: Filters = {}) {
   const [filters, setFilters] = useState<Filters>(initialFilters)
   const [total, setTotal] = useState(0)
 
-  const fetchPhotographers = useCallback(async (f: Filters = filters) => {
+  const fetchPhotographers = useCallback(async (f: Filters) => {
     setLoading(true)
     setError(null)
     try {
@@ -48,13 +48,15 @@ export function usePhotographers(initialFilters: Filters = {}) {
     } finally {
       setLoading(false)
     }
-  }, [filters])
+  }, [])
 
   const updateFilters = useCallback((newFilters: Partial<Filters>) => {
-    const updated = { ...filters, ...newFilters, page: 1 }
-    setFilters(updated)
-    fetchPhotographers(updated)
-  }, [filters, fetchPhotographers])
+    setFilters(prev => {
+      const updated = { ...prev, ...newFilters, page: 1 }
+      fetchPhotographers(updated)
+      return updated
+    })
+  }, [fetchPhotographers])
 
   return { photographers, loading, error, filters, total, fetchPhotographers, updateFilters }
 }

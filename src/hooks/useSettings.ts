@@ -8,9 +8,9 @@ export function useSettings() {
   const [settings, setSettings] = useState<AppSetting[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const supabase = createClient()
 
   const fetchSettings = useCallback(async () => {
+    const supabase = createClient()
     setLoading(true)
     setError(null)
     try {
@@ -27,9 +27,10 @@ export function useSettings() {
     }
   }, [])
 
-  useEffect(() => { fetchSettings() }, [fetchSettings]) // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { fetchSettings() }, [fetchSettings])
 
   const updateSetting = async (key: string, value: string) => {
+    const supabase = createClient()
     const { error } = await supabase
       .from('photographes_app_settings')
       .upsert({ key, value, updated_at: new Date().toISOString() }, { onConflict: 'key' })

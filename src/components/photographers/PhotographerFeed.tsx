@@ -10,11 +10,11 @@ interface PhotographerFeedProps {
 }
 
 export function PhotographerFeed({ initialFilters = {} }: PhotographerFeedProps) {
-  const { photographers, loading, error, fetchPhotographers } = usePhotographers(initialFilters)
+  const { photographers, loading, error, filters, fetchPhotographers } = usePhotographers(initialFilters)
 
   useEffect(() => {
-    fetchPhotographers()
-  }, [fetchPhotographers])
+    fetchPhotographers(filters)
+  }, [fetchPhotographers]) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (loading) {
     return (

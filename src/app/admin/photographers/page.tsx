@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { PhotographersTable } from '@/components/admin/PhotographersTable'
 import { Input } from '@/components/ui/input'
@@ -13,20 +13,21 @@ export default function AdminPhotographersPage() {
   const [photographers, setPhotographers] = useState<Photographer[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
-  const supabase = createClient()
 
-  const loadPhotographers = async () => {
+  const loadPhotographers = useCallback(async () => {
+    const supabase = createClient()
     setLoading(true)
     let query = supabase.from('photographes_photographers').select('*').order('created_at', { ascending: false })
     if (search) query = query.ilike('name', `%${search}%`)
     const { data } = await query
     setPhotographers(data ?? [])
     setLoading(false)
-  }
+  }, [search])
 
-  useEffect(() => { loadPhotographers() }, [search]) // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { loadPhotographers() }, [loadPhotographers])
 
   const handleToggleFeatured = async (id: string, value: boolean) => {
+    const supabase = createClient()
     await supabase.from('photographes_photographers').update({ featured: value }).eq('id', id)
     toast.success(value ? 'Mis en vedette' : 'Retiré de la vedette')
     loadPhotographers()
@@ -34,6 +35,7 @@ export default function AdminPhotographersPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Supprimer ce photographe ?')) return
+    const supabase = createClient()
     await supabase.from('photographes_photographers').delete().eq('id', id)
     toast.success('Photographe supprimé')
     loadPhotographers()
