@@ -3,11 +3,11 @@ library;
 
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_reorderable_grid_view/widgets/reorderable_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/constants/app_constants.dart';
@@ -37,10 +37,12 @@ class _PortfolioManagementScreenState
   bool _isUploading = false;
 
   Future<void> _addPhoto() async {
-    final photos = await ref.read(_myPhotosProvider.future).catchError((_) => <PortfolioPhoto>[]);
+    final photos = await ref
+        .read(_myPhotosProvider.future)
+        .catchError((_) => <PortfolioPhoto>[]);
     if (photos.length >= AppConstants.portfolioMaxPhotosDefault) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text(
               'Maximum ${AppConstants.portfolioMaxPhotosDefault} photos atteint'),
         ),
@@ -54,9 +56,7 @@ class _PortfolioManagementScreenState
     if (picked == null) return;
     setState(() => _isUploading = true);
     try {
-      await ref
-          .read(_portfolioMgmtRepoProvider)
-          .uploadPhoto(File(picked.path));
+      await ref.read(_portfolioMgmtRepoProvider).uploadPhoto(File(picked.path));
       ref.invalidate(_myPhotosProvider);
     } catch (e) {
       if (!mounted) return;
@@ -126,11 +126,11 @@ class _PortfolioManagementScreenState
         label: const Text('Ajouter'),
       ),
       body: photosAsync.when(
-        loading: () =>
-            const Center(child: CircularProgressIndicator(color: AppColors.gold)),
+        loading: () => const Center(
+            child: CircularProgressIndicator(color: AppColors.gold)),
         error: (e, _) => Center(child: Text(e.toString())),
         data: (photos) {
-          final quota = AppConstants.portfolioMaxPhotosDefault;
+          const quota = AppConstants.portfolioMaxPhotosDefault;
           return Column(
             children: [
               Padding(
@@ -198,8 +198,7 @@ class _PortfolioManagementScreenState
                                 key: ValueKey(photo.id),
                                 photo: photo,
                                 onDelete: () => _deletePhoto(photo),
-                                onToggleFeatured: () =>
-                                    _toggleFeatured(photo),
+                                onToggleFeatured: () => _toggleFeatured(photo),
                               ),
                             )
                             .toList(),
@@ -233,10 +232,8 @@ class _PhotoTile extends StatelessWidget {
         CachedNetworkImage(
           imageUrl: photo.thumbnailUrl ?? photo.url,
           fit: BoxFit.cover,
-          placeholder: (_, __) =>
-              Container(color: AppColors.greyLight),
-          errorWidget: (_, __, ___) =>
-              Container(color: AppColors.greyLight),
+          placeholder: (_, __) => Container(color: AppColors.greyLight),
+          errorWidget: (_, __, ___) => Container(color: AppColors.greyLight),
         ),
         // Star button
         Positioned(
@@ -247,12 +244,14 @@ class _PhotoTile extends StatelessWidget {
             child: Container(
               width: 28,
               height: 28,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.black54,
                 shape: BoxShape.circle,
               ),
               child: Icon(
-                photo.isFeatured ? Icons.star_rounded : Icons.star_outline_rounded,
+                photo.isFeatured
+                    ? Icons.star_rounded
+                    : Icons.star_outline_rounded,
                 color: AppColors.gold,
                 size: 18,
               ),

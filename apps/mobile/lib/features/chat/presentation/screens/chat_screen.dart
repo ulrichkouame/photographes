@@ -11,8 +11,8 @@ import '../../../../core/constants/app_constants.dart';
 import '../../data/chat_repository.dart';
 import '../../domain/message_model.dart';
 
-final _chatRepoProvider = Provider<ChatRepository>(
-    (ref) => ChatRepository(Supabase.instance.client));
+final _chatRepoProvider =
+    Provider<ChatRepository>((ref) => ChatRepository(Supabase.instance.client));
 
 final _messagesProvider =
     StreamProvider.family<List<Message>, String>((ref, roomId) {
@@ -62,8 +62,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           );
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (_scrollController.hasClients) {
-          _scrollController
-              .jumpTo(_scrollController.position.maxScrollExtent);
+          _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
         }
       });
     } catch (e) {
@@ -88,11 +87,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           .select('phone')
           .eq('id', widget.otherUserId)
           .maybeSingle();
-      phone = (data?['phone'] as String? ?? '').replaceAll(RegExp(r'[^\d]'), '');
+      phone =
+          (data?['phone'] as String? ?? '').replaceAll(RegExp(r'[^\d]'), '');
     } catch (_) {}
-    final waUrl = phone.isNotEmpty
-        ? 'https://wa.me/$phone'
-        : 'https://wa.me/';
+    final waUrl = phone.isNotEmpty ? 'https://wa.me/$phone' : 'https://wa.me/';
     final uri = Uri.parse(waUrl);
     if (await canLaunchUrl(uri)) await launchUrl(uri);
   }
@@ -111,13 +109,12 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.otherUserName.isNotEmpty
-              ? widget.otherUserName
-              : 'Chat',
+          widget.otherUserName.isNotEmpty ? widget.otherUserName : 'Chat',
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.chat_bubble_outline, color: AppColors.success),
+            icon:
+                const Icon(Icons.chat_bubble_outline, color: AppColors.success),
             tooltip: 'Ouvrir WhatsApp',
             onPressed: _openWhatsApp,
           ),
@@ -158,11 +155,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.surface,
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                   color: Colors.black12,
                   blurRadius: 4,
-                  offset: const Offset(0, -2),
+                  offset: Offset(0, -2),
                 ),
               ],
             ),
@@ -176,8 +173,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                       textCapitalization: TextCapitalization.sentences,
                       decoration: const InputDecoration(
                         hintText: 'Écrire un message…',
-                        contentPadding: EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 10),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                       ),
                     ),
                   ),
@@ -226,9 +223,7 @@ class _MessageBubble extends StatelessWidget {
           maxWidth: MediaQuery.of(context).size.width * 0.72,
         ),
         decoration: BoxDecoration(
-          color: isMe
-              ? AppColors.gold
-              : Theme.of(context).colorScheme.surface,
+          color: isMe ? AppColors.gold : Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.only(
             topLeft: const Radius.circular(16),
             topRight: const Radius.circular(16),
@@ -258,9 +253,7 @@ class _MessageBubble extends StatelessWidget {
               timeago.format(message.createdAt, locale: 'fr'),
               style: TextStyle(
                 fontSize: 10,
-                color: isMe
-                    ? AppColors.black.withOpacity(0.6)
-                    : AppColors.grey,
+                color: isMe ? AppColors.black.withOpacity(0.6) : AppColors.grey,
               ),
             ),
           ],

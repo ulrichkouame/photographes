@@ -162,8 +162,7 @@ class _ProfileBody extends ConsumerWidget {
                     children: [
                       _StatChip(
                         icon: Icons.star_rounded,
-                        label:
-                            '${photographer.rating.toStringAsFixed(1)} / 5',
+                        label: '${photographer.rating.toStringAsFixed(1)} / 5',
                         color: AppColors.gold,
                       ),
                       const SizedBox(width: 8),
@@ -176,9 +175,8 @@ class _ProfileBody extends ConsumerWidget {
                       const SizedBox(width: 8),
                       _StatChip(
                         icon: Icons.circle,
-                        label: photographer.isAvailable
-                            ? 'Disponible'
-                            : 'Occupé',
+                        label:
+                            photographer.isAvailable ? 'Disponible' : 'Occupé',
                         color: photographer.isAvailable
                             ? AppColors.success
                             : AppColors.error,
@@ -208,7 +206,8 @@ class _ProfileBody extends ConsumerWidget {
                   const SizedBox(height: 20),
 
                   // About
-                  if (photographer.bio != null && photographer.bio!.isNotEmpty) ...[
+                  if (photographer.bio != null &&
+                      photographer.bio!.isNotEmpty) ...[
                     Text(
                       'À propos',
                       style: Theme.of(context)
@@ -240,8 +239,7 @@ class _ProfileBody extends ConsumerWidget {
                     loading: () => const SizedBox(
                       height: 200,
                       child: Center(
-                        child:
-                            CircularProgressIndicator(color: AppColors.gold),
+                        child: CircularProgressIndicator(color: AppColors.gold),
                       ),
                     ),
                     error: (e, _) => Text(e.toString()),
@@ -268,8 +266,7 @@ class _ProfileBody extends ConsumerWidget {
                   const SizedBox(height: 8),
                   reviewsAsync.when(
                     loading: () => const Center(
-                      child:
-                          CircularProgressIndicator(color: AppColors.gold),
+                      child: CircularProgressIndicator(color: AppColors.gold),
                     ),
                     error: (e, _) => Text(e.toString()),
                     data: (reviews) => reviews.isEmpty

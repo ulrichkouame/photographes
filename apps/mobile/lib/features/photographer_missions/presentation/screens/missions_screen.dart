@@ -43,8 +43,8 @@ class MissionsScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Missions')),
       body: bookingsAsync.when(
-        loading: () =>
-            const Center(child: CircularProgressIndicator(color: AppColors.gold)),
+        loading: () => const Center(
+            child: CircularProgressIndicator(color: AppColors.gold)),
         error: (e, _) => Center(child: Text(e.toString())),
         data: (bookings) {
           if (bookings.isEmpty) {
@@ -63,8 +63,7 @@ class MissionsScreen extends ConsumerWidget {
           }
           return RefreshIndicator(
             color: AppColors.gold,
-            onRefresh: () async =>
-                ref.refresh(_photographerBookingsProvider),
+            onRefresh: () async => ref.refresh(_photographerBookingsProvider),
             child: ListView.builder(
               padding: const EdgeInsets.all(16),
               itemCount: bookings.length,
@@ -137,8 +136,8 @@ class MissionsScreen extends ConsumerWidget {
                           const SizedBox(height: 8),
                           Text(
                             booking.message!,
-                            style:
-                                const TextStyle(color: AppColors.grey, fontSize: 13),
+                            style: const TextStyle(
+                                color: AppColors.grey, fontSize: 13),
                           ),
                         ],
                         if (isPending) ...[
@@ -150,8 +149,7 @@ class MissionsScreen extends ConsumerWidget {
                                   onPressed: () async {
                                     await ref
                                         .read(_missionRepoProvider)
-                                        .updateStatus(
-                                            booking.id,
+                                        .updateStatus(booking.id,
                                             AppConstants.statusAccepted);
                                     ref.invalidate(
                                         _photographerBookingsProvider);
@@ -170,8 +168,7 @@ class MissionsScreen extends ConsumerWidget {
                                   onPressed: () async {
                                     await ref
                                         .read(_missionRepoProvider)
-                                        .updateStatus(
-                                            booking.id,
+                                        .updateStatus(booking.id,
                                             AppConstants.statusRefused);
                                     ref.invalidate(
                                         _photographerBookingsProvider);

@@ -51,8 +51,9 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
       builder: (ctx, child) => Theme(
-        data: Theme.of(ctx)
-            .copyWith(colorScheme: Theme.of(ctx).colorScheme.copyWith(primary: AppColors.gold)),
+        data: Theme.of(ctx).copyWith(
+            colorScheme:
+                Theme.of(ctx).colorScheme.copyWith(primary: AppColors.gold)),
         child: child!,
       ),
     );
@@ -67,7 +68,8 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
       );
       return;
     }
-    final settings = ref.read(appSettingsProvider).value ?? AppSettings.defaults();
+    final settings =
+        ref.read(appSettingsProvider).value ?? AppSettings.defaults();
     setState(() => _isLoading = true);
     try {
       final repo = ref.read(_bookingRepoProvider);
@@ -101,7 +103,8 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
   @override
   Widget build(BuildContext context) {
     final settingsAsync = ref.watch(appSettingsProvider);
-    final contactCost = settingsAsync.value?.contactCost ?? AppConstants.defaultContactCost;
+    final contactCost =
+        settingsAsync.value?.contactCost ?? AppConstants.defaultContactCost;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Contacter le photographe')),
@@ -139,7 +142,7 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
                 ),
                 const SizedBox(height: 24),
                 DropdownButtonFormField<String>(
-                  value: _selectedService,
+                  initialValue: _selectedService,
                   items: _services
                       .map((s) => DropdownMenuItem(value: s, child: Text(s)))
                       .toList(),

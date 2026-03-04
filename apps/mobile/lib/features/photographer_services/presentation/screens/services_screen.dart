@@ -37,8 +37,8 @@ class ServicesScreen extends ConsumerWidget {
         child: const Icon(Icons.add),
       ),
       body: servicesAsync.when(
-        loading: () =>
-            const Center(child: CircularProgressIndicator(color: AppColors.gold)),
+        loading: () => const Center(
+            child: CircularProgressIndicator(color: AppColors.gold)),
         error: (e, _) => Center(child: Text(e.toString())),
         data: (services) {
           if (services.isEmpty) {
@@ -67,8 +67,7 @@ class ServicesScreen extends ConsumerWidget {
                   alignment: Alignment.centerRight,
                   padding: const EdgeInsets.only(right: 16),
                   color: AppColors.error,
-                  child:
-                      const Icon(Icons.delete_outline, color: Colors.white),
+                  child: const Icon(Icons.delete_outline, color: Colors.white),
                 ),
                 confirmDismiss: (_) async {
                   return await showDialog<bool>(
@@ -98,8 +97,7 @@ class ServicesScreen extends ConsumerWidget {
                   margin: const EdgeInsets.only(bottom: 12),
                   child: ListTile(
                     title: Text(service.name,
-                        style:
-                            const TextStyle(fontWeight: FontWeight.w600)),
+                        style: const TextStyle(fontWeight: FontWeight.w600)),
                     subtitle: service.description != null
                         ? Text(service.description!)
                         : null,
@@ -122,8 +120,7 @@ class ServicesScreen extends ConsumerWidget {
                           ),
                       ],
                     ),
-                    onTap: () =>
-                        _showServiceForm(context, ref, service),
+                    onTap: () => _showServiceForm(context, ref, service),
                   ),
                 ),
               );
@@ -173,8 +170,7 @@ class _ServiceFormSheetState extends State<_ServiceFormSheet> {
   void initState() {
     super.initState();
     _nameCtrl = TextEditingController(text: widget.existing?.name ?? '');
-    _descCtrl =
-        TextEditingController(text: widget.existing?.description ?? '');
+    _descCtrl = TextEditingController(text: widget.existing?.description ?? '');
     _priceCtrl = TextEditingController(
         text: widget.existing?.price.toStringAsFixed(0) ?? '');
     _durationCtrl = TextEditingController(
@@ -237,7 +233,9 @@ class _ServiceFormSheetState extends State<_ServiceFormSheet> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              widget.existing != null ? 'Modifier le service' : 'Nouveau service',
+              widget.existing != null
+                  ? 'Modifier le service'
+                  : 'Nouveau service',
               style: Theme.of(context)
                   .textTheme
                   .titleLarge
@@ -247,8 +245,7 @@ class _ServiceFormSheetState extends State<_ServiceFormSheet> {
             TextFormField(
               controller: _nameCtrl,
               decoration: const InputDecoration(labelText: 'Nom du service'),
-              validator: (v) =>
-                  v == null || v.isEmpty ? 'Champ requis' : null,
+              validator: (v) => v == null || v.isEmpty ? 'Champ requis' : null,
             ),
             const SizedBox(height: 12),
             TextFormField(
@@ -263,8 +260,7 @@ class _ServiceFormSheetState extends State<_ServiceFormSheet> {
                   child: TextFormField(
                     controller: _priceCtrl,
                     keyboardType: TextInputType.number,
-                    decoration:
-                        const InputDecoration(labelText: 'Prix (FCFA)'),
+                    decoration: const InputDecoration(labelText: 'Prix (FCFA)'),
                     validator: (v) =>
                         v == null || v.isEmpty ? 'Champ requis' : null,
                   ),
@@ -274,8 +270,7 @@ class _ServiceFormSheetState extends State<_ServiceFormSheet> {
                   child: TextFormField(
                     controller: _durationCtrl,
                     keyboardType: TextInputType.number,
-                    decoration:
-                        const InputDecoration(labelText: 'Durée (h)'),
+                    decoration: const InputDecoration(labelText: 'Durée (h)'),
                   ),
                 ),
               ],

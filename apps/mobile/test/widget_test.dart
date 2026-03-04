@@ -243,12 +243,13 @@ void main() {
     });
 
     test('copyWith updates only the specified field', () {
-      const original = FilterModel(commune: 'Abidjan - Plateau', maxBudget: 50000);
+      const original =
+          FilterModel(commune: 'Abidjan - Plateau', maxBudget: 50000);
       final updated = original.copyWith(commune: 'Yamoussoukro');
 
       expect(updated.commune, 'Yamoussoukro');
       expect(updated.maxBudget, 50000); // unchanged
-      expect(updated.category, isNull);  // unchanged
+      expect(updated.category, isNull); // unchanged
     });
 
     test('copyWith clear flags reset individual fields', () {
@@ -262,8 +263,8 @@ void main() {
 
       expect(cleared.category, isNull);
       expect(cleared.maxBudget, isNull);
-      expect(cleared.commune, 'Bouaké');   // unchanged
-      expect(cleared.minRating, 4.0);      // unchanged
+      expect(cleared.commune, 'Bouaké'); // unchanged
+      expect(cleared.minRating, 4.0); // unchanged
     });
 
     test('constructor with all fields', () {

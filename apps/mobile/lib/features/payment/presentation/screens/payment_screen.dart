@@ -12,8 +12,8 @@ import '../../../../core/constants/app_constants.dart';
 import '../../../../core/providers/app_settings_provider.dart';
 import '../../data/payment_repository.dart';
 
-final _paymentRepoProvider = Provider<PaymentRepository>((ref) =>
-    PaymentRepository(Supabase.instance.client, Dio()));
+final _paymentRepoProvider = Provider<PaymentRepository>(
+    (ref) => PaymentRepository(Supabase.instance.client, Dio()));
 
 /// Allows clients to pay via Orange Money, Wave, or MTN MoMo.
 class PaymentScreen extends ConsumerStatefulWidget {
@@ -50,7 +50,8 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
       );
       return;
     }
-    final settings = ref.read(appSettingsProvider).value ?? AppSettings.defaults();
+    final settings =
+        ref.read(appSettingsProvider).value ?? AppSettings.defaults();
     if (settings.paymentApiUrl.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Service de paiement non disponible')),
@@ -176,9 +177,8 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: isSelected
-                            ? AppColors.gold
-                            : AppColors.greyLight,
+                        color:
+                            isSelected ? AppColors.gold : AppColors.greyLight,
                         width: isSelected ? 2 : 1,
                       ),
                       color: isSelected
@@ -235,8 +235,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                           color: AppColors.black,
                         ),
                       )
-                    : Text(
-                        'Payer ${contactCost.toStringAsFixed(0)} FCFA'),
+                    : Text('Payer ${contactCost.toStringAsFixed(0)} FCFA'),
               ),
             ],
           ),
