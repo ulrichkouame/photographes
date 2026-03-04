@@ -4,6 +4,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/constants/app_constants.dart';
 
@@ -145,13 +146,19 @@ class SettingsScreen extends ConsumerWidget {
                 color: AppColors.gold),
             title: const Text('Politique de confidentialité'),
             trailing: const Icon(Icons.open_in_new, size: 16),
-            onTap: () {},
+            onTap: () => launchUrl(
+              Uri.parse('https://photographes.ci/privacy'),
+              mode: LaunchMode.externalApplication,
+            ),
           ),
           ListTile(
             leading: const Icon(Icons.gavel_outlined, color: AppColors.gold),
             title: const Text('Conditions d\'utilisation'),
             trailing: const Icon(Icons.open_in_new, size: 16),
-            onTap: () {},
+            onTap: () => launchUrl(
+              Uri.parse('https://photographes.ci/terms'),
+              mode: LaunchMode.externalApplication,
+            ),
           ),
         ],
       ),

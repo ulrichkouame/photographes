@@ -80,8 +80,20 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   }
 
   Future<void> _openWhatsApp() async {
-    final uri = Uri.parse(
-        'https://wa.me/${AppConstants.defaultCountryCode.replaceAll('+', '')}');
+    // Fetch the other user's phone number from their profile.
+    String phone = '';
+    try {
+      final data = await Supabase.instance.client
+          .from('profiles')
+          .select('phone')
+          .eq('id', widget.otherUserId)
+          .maybeSingle();
+      phone = (data?['phone'] as String? ?? '').replaceAll(RegExp(r'[^\d]'), '');
+    } catch (_) {}
+    final waUrl = phone.isNotEmpty
+        ? 'https://wa.me/$phone'
+        : 'https://wa.me/';
+    final uri = Uri.parse(waUrl);
     if (await canLaunchUrl(uri)) await launchUrl(uri);
   }
 

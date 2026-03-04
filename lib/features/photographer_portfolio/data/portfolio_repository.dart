@@ -34,6 +34,16 @@ class PortfolioManagementRepository {
 
     final url = _client.storage.from('portfolio').getPublicUrl(filename);
 
+    // Determine the next sort_order by reading the current maximum.
+    final existing = await _client
+        .from('portfolio_photos')
+        .select('sort_order')
+        .eq('photographer_id', _userId)
+        .order('sort_order', ascending: false)
+        .limit(1);
+    final maxOrder =
+        (existing as List).isNotEmpty ? ((existing.first['sort_order'] as int?) ?? 0) : 0;
+
     final record = await _client
         .from('portfolio_photos')
         .insert({
@@ -41,7 +51,7 @@ class PortfolioManagementRepository {
           'url': url,
           'thumbnail_url': url,
           'is_featured': false,
-          'sort_order': DateTime.now().millisecondsSinceEpoch,
+          'sort_order': maxOrder + 1,
           'created_at': DateTime.now().toIso8601String(),
         })
         .select()

@@ -31,9 +31,15 @@ class AppConstants {
   static const String appName = 'Photographes.ci';
   static const String appVersion = '1.0.0';
 
-  /// Supabase configuration – replace with real values
-  static const String supabaseUrl = 'https://YOUR_PROJECT.supabase.co';
-  static const String supabaseAnonKey = 'YOUR_ANON_KEY';
+  /// Supabase configuration – inject at build time via --dart-define:
+  ///   flutter build apk \
+  ///     --dart-define=SUPABASE_URL=https://xxxx.supabase.co \
+  ///     --dart-define=SUPABASE_ANON_KEY=eyJ...
+  /// Never commit real credentials to source control.
+  static const String supabaseUrl =
+      String.fromEnvironment('SUPABASE_URL', defaultValue: 'https://YOUR_PROJECT.supabase.co');
+  static const String supabaseAnonKey =
+      String.fromEnvironment('SUPABASE_ANON_KEY', defaultValue: 'YOUR_ANON_KEY');
 
   /// Edge function names
   static const String syncSettingsFunction = 'photographes_sync-settings';

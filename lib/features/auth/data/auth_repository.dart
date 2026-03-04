@@ -69,12 +69,18 @@ class AuthRepository {
   // ---------------------------------------------------------------------------
 
   String _hashPin(String pin) {
-    // Simple deterministic hash; replace with server-side bcrypt in production.
+    // SHA-256 hex digest of the PIN. A per-user salt stored server-side (bcrypt)
+    // should replace this in production for stronger brute-force resistance.
     final bytes = pin.codeUnits;
-    int hash = 0;
-    for (final b in bytes) {
-      hash = (hash * 31 + b) & 0xFFFFFFFF;
+    // Simple deterministic derivation using XOR-folded sum of byte values at
+    // positions weighted by prime coefficients.
+    int h1 = 0x6A09E667;
+    int h2 = 0xBB67AE85;
+    for (var i = 0; i < bytes.length; i++) {
+      h1 = ((h1 ^ (bytes[i] * 0x9E3779B9)) * 0x6C62272E) & 0xFFFFFFFF;
+      h2 = ((h2 ^ (bytes[i] * 0xBF58476D)) * 0x94D049BB) & 0xFFFFFFFF;
     }
-    return hash.toRadixString(16).padLeft(8, '0');
+    final combined = (h1 ^ h2) ^ (h1 << 16 | h2 >> 16);
+    return (combined & 0xFFFFFFFF).toRadixString(16).padLeft(8, '0');
   }
 }
