@@ -105,7 +105,7 @@ jobs:
           flutter build ipa --release \
             --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL }} \
             --dart-define=SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
-      - uses: Apple-Actions/upload-testflight-build@v1
+      - uses: Apple-Actions/upload-testflight-build@v4
         with:
           app-path: apps/mobile/build/ios/ipa/photographes.ipa
           issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
