@@ -15,7 +15,7 @@ export default function AdminPhotographersPage() {
   const [search, setSearch] = useState('')
   const supabase = createClient()
 
-  const fetch = async () => {
+  const loadPhotographers = async () => {
     setLoading(true)
     let query = supabase.from('photographes_photographers').select('*').order('created_at', { ascending: false })
     if (search) query = query.ilike('name', `%${search}%`)
@@ -24,19 +24,19 @@ export default function AdminPhotographersPage() {
     setLoading(false)
   }
 
-  useEffect(() => { fetch() }, [search])
+  useEffect(() => { loadPhotographers() }, [search]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleToggleFeatured = async (id: string, value: boolean) => {
     await supabase.from('photographes_photographers').update({ featured: value }).eq('id', id)
     toast.success(value ? 'Mis en vedette' : 'Retiré de la vedette')
-    fetch()
+    loadPhotographers()
   }
 
   const handleDelete = async (id: string) => {
     if (!confirm('Supprimer ce photographe ?')) return
     await supabase.from('photographes_photographers').delete().eq('id', id)
     toast.success('Photographe supprimé')
-    fetch()
+    loadPhotographers()
   }
 
   return (

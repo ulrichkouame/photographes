@@ -27,7 +27,7 @@ export function useSettings() {
     }
   }, [])
 
-  useEffect(() => { fetchSettings() }, [fetchSettings])
+  useEffect(() => { fetchSettings() }, [fetchSettings]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const updateSetting = async (key: string, value: string) => {
     const { error } = await supabase
