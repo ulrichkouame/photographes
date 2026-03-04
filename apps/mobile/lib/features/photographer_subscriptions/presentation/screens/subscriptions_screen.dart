@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/constants/app_constants.dart';
-import '../domain/subscription_model.dart';
+import '../../domain/subscription_model.dart';
 
 // ---------------------------------------------------------------------------
 // Static plan definitions (could also come from backend)

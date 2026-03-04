@@ -4,7 +4,7 @@ library;
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../domain/portfolio_photo_model.dart';
 import '../domain/review_model.dart';
-import '../../../feed/domain/photographer_model.dart';
+import '../../feed/domain/photographer_model.dart';
 
 /// Handles all data access for a photographer's full public profile.
 class ProfileRepository {

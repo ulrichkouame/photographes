@@ -153,7 +153,7 @@ class MissionsScreen extends ConsumerWidget {
                                         .updateStatus(
                                             booking.id,
                                             AppConstants.statusAccepted);
-                                    ref.refresh(
+                                    ref.invalidate(
                                         _photographerBookingsProvider);
                                   },
                                   icon: const Icon(Icons.check),
@@ -173,7 +173,7 @@ class MissionsScreen extends ConsumerWidget {
                                         .updateStatus(
                                             booking.id,
                                             AppConstants.statusRefused);
-                                    ref.refresh(
+                                    ref.invalidate(
                                         _photographerBookingsProvider);
                                   },
                                   icon: const Icon(Icons.close),

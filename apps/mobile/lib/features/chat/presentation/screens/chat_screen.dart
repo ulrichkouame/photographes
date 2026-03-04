@@ -117,7 +117,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.whatsapp, color: AppColors.success),
+            icon: Icon(Icons.chat_bubble_outline, color: AppColors.success),
             tooltip: 'Ouvrir WhatsApp',
             onPressed: _openWhatsApp,
           ),

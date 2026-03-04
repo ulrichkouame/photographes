@@ -1,12 +1,12 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
-import { createClient } from '@/lib/supabase/client'
 import { PhotographersTable } from '@/components/admin/PhotographersTable'
-import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { createClient } from '@/lib/supabase/client'
 import type { Photographer } from '@/types/database'
 import { Loader2 } from 'lucide-react'
+import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 export default function AdminPhotographersPage() {

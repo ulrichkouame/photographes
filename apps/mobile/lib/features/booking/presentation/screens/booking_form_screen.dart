@@ -9,7 +9,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/providers/app_settings_provider.dart';
-import '../../../../core/router/app_router.dart';
 import '../../data/booking_repository.dart';
 
 final _bookingRepoProvider = Provider<BookingRepository>(

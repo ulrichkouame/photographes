@@ -1,12 +1,12 @@
-import { notFound } from 'next/navigation'
-import Image from 'next/image'
-import { createClient } from '@/lib/supabase/server'
-import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
+import { Header } from '@/components/layout/Header'
 import { PortfolioGrid } from '@/components/photographers/PortfolioGrid'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { createClient } from '@/lib/supabase/server'
 import { MapPin, Star } from 'lucide-react'
+import Image from 'next/image'
+import { notFound } from 'next/navigation'
 
 interface Props {
   params: Promise<{ slug: string }>

@@ -10,13 +10,12 @@
 library;
 
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:photographes_mobile/core/constants/app_constants.dart';
 import 'package:photographes_mobile/features/booking/domain/booking_model.dart';
-import 'package:photographes_mobile/features/payment/domain/payment_model.dart';
-import 'package:photographes_mobile/features/photographer_services/domain/service_model.dart';
 import 'package:photographes_mobile/features/feed/domain/filter_model.dart';
 import 'package:photographes_mobile/features/feed/domain/photographer_model.dart';
+import 'package:photographes_mobile/features/payment/domain/payment_model.dart';
+import 'package:photographes_mobile/features/photographer_services/domain/service_model.dart';
 
 void main() {
   // ─────────────────────────────────────────────────────────────────────────
@@ -228,54 +227,61 @@ void main() {
   // FilterModel
   // ─────────────────────────────────────────────────────────────────────────
   group('FilterModel', () {
-    test('default filter has no constraints', () {
+    test('default filter has no active constraints', () {
       const filter = FilterModel();
-      expect(filter.city, isNull);
-      expect(filter.specialty, isNull);
-      expect(filter.minPrice, isNull);
-      expect(filter.maxPrice, isNull);
-      expect(filter.onlyAvailable, isFalse);
+      expect(filter.category, isNull);
+      expect(filter.commune, isNull);
+      expect(filter.maxBudget, isNull);
       expect(filter.minRating, isNull);
+      expect(filter.availableDate, isNull);
+      expect(filter.hasActiveFilter, isFalse);
     });
 
-    test('fromJson parses all fields', () {
-      final json = <String, dynamic>{
-        'city': 'Abidjan - Cocody',
-        'specialty': 'Mariage',
-        'min_price': 10000.0,
-        'max_price': 100000.0,
-        'only_available': true,
-        'min_rating': 4.0,
-      };
-      final filter = FilterModel.fromJson(json);
-
-      expect(filter.city, 'Abidjan - Cocody');
-      expect(filter.specialty, 'Mariage');
-      expect(filter.minPrice, 10000.0);
-      expect(filter.maxPrice, 100000.0);
-      expect(filter.onlyAvailable, isTrue);
-      expect(filter.minRating, 4.0);
+    test('hasActiveFilter returns true when a field is set', () {
+      const filter = FilterModel(category: 'Mariage');
+      expect(filter.hasActiveFilter, isTrue);
     });
 
-    test('toJson round-trips correctly', () {
+    test('copyWith updates only the specified field', () {
+      const original = FilterModel(commune: 'Abidjan - Plateau', maxBudget: 50000);
+      final updated = original.copyWith(commune: 'Yamoussoukro');
+
+      expect(updated.commune, 'Yamoussoukro');
+      expect(updated.maxBudget, 50000); // unchanged
+      expect(updated.category, isNull);  // unchanged
+    });
+
+    test('copyWith clear flags reset individual fields', () {
       const filter = FilterModel(
-        city: 'Bouaké',
-        specialty: 'Portrait',
-        onlyAvailable: true,
+        category: 'Mariage',
+        commune: 'Bouaké',
+        maxBudget: 100000,
+        minRating: 4.0,
       );
-      final json = filter.toJson();
+      final cleared = filter.copyWith(clearCategory: true, clearBudget: true);
 
-      expect(json['city'], 'Bouaké');
-      expect(json['specialty'], 'Portrait');
-      expect(json['only_available'], isTrue);
+      expect(cleared.category, isNull);
+      expect(cleared.maxBudget, isNull);
+      expect(cleared.commune, 'Bouaké');   // unchanged
+      expect(cleared.minRating, 4.0);      // unchanged
     });
 
-    test('copyWith updates only specified fields', () {
-      const original = FilterModel(city: 'Abidjan - Plateau', minPrice: 5000);
-      final updated = original.copyWith(city: 'Yamoussoukro');
+    test('constructor with all fields', () {
+      final date = DateTime(2026, 6, 15);
+      final filter = FilterModel(
+        category: 'Portrait',
+        commune: 'Abidjan - Cocody',
+        maxBudget: 75000,
+        minRating: 3.5,
+        availableDate: date,
+      );
 
-      expect(updated.city, 'Yamoussoukro');
-      expect(updated.minPrice, 5000); // unchanged
+      expect(filter.category, 'Portrait');
+      expect(filter.commune, 'Abidjan - Cocody');
+      expect(filter.maxBudget, 75000);
+      expect(filter.minRating, 3.5);
+      expect(filter.availableDate, date);
+      expect(filter.hasActiveFilter, isTrue);
     });
   });
 
@@ -285,7 +291,6 @@ void main() {
   group('PhotographerModel', () {
     final Map<String, dynamic> json = {
       'id': 'photo-1',
-      'profile_id': 'profile-1',
       'full_name': 'Kouamé Ulrich',
       'avatar_url': 'https://example.com/avatar.jpg',
       'bio': 'Photographe professionnel basé à Abidjan.',
@@ -294,23 +299,21 @@ void main() {
       'price_per_hour': 25000.0,
       'is_available': true,
       'average_rating': 4.8,
-      'review_count': 23,
-      'portfolio_count': 42,
-      'created_at': '2025-01-10T08:00:00.000Z',
+      'badge_verified': true,
+      'portfolio_urls': ['https://example.com/p1.jpg'],
     };
 
     test('fromJson parses all fields', () {
       final model = PhotographerModel.fromJson(json);
 
       expect(model.id, 'photo-1');
-      expect(model.fullName, 'Kouamé Ulrich');
+      expect(model.name, 'Kouamé Ulrich');
       expect(model.city, 'Abidjan - Cocody');
       expect(model.specialties, contains('Mariage'));
       expect(model.pricePerHour, 25000.0);
       expect(model.isAvailable, isTrue);
-      expect(model.averageRating, 4.8);
-      expect(model.reviewCount, 23);
-      expect(model.portfolioCount, 42);
+      expect(model.rating, 4.8);
+      expect(model.badgeVerified, isTrue);
     });
 
     test('toJson round-trips correctly', () {
@@ -320,31 +323,29 @@ void main() {
       expect(output['id'], json['id']);
       expect(output['full_name'], json['full_name']);
       expect(output['city'], json['city']);
+      expect(output['average_rating'], json['average_rating']);
     });
 
-    test('optional fields are nullable', () {
+    test('optional fields have defaults when absent', () {
       final minimal = <String, dynamic>{
         'id': 'photo-2',
-        'profile_id': 'profile-2',
         'is_available': false,
-        'average_rating': 0.0,
-        'review_count': 0,
-        'portfolio_count': 0,
-        'created_at': '2026-01-01T00:00:00.000Z',
       };
       final model = PhotographerModel.fromJson(minimal);
 
-      expect(model.fullName, isNull);
+      expect(model.name, 'Photographe'); // default
       expect(model.city, isNull);
       expect(model.bio, isNull);
-      expect(model.pricePerHour, isNull);
+      expect(model.pricePerHour, 0.0);
+      expect(model.rating, 0.0);
       expect(model.specialties, isEmpty);
+      expect(model.portfolioUrls, isEmpty);
     });
 
-    test('averageRating clamps to [0, 5]', () {
-      final over5 = {...json, 'average_rating': 5.0};
-      final model = PhotographerModel.fromJson(over5);
-      expect(model.averageRating, lessThanOrEqualTo(5.0));
+    test('rating is parsed as double', () {
+      final model = PhotographerModel.fromJson({...json, 'average_rating': 5});
+      expect(model.rating, isA<double>());
+      expect(model.rating, lessThanOrEqualTo(5.0));
     });
   });
 }

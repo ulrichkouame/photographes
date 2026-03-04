@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/constants/app_constants.dart';
-import '../domain/service_model.dart';
+import '../../domain/service_model.dart';
 
 final _servicesProvider =
     FutureProvider.autoDispose<List<ServiceModel>>((ref) async {
@@ -92,7 +92,7 @@ class ServicesScreen extends ConsumerWidget {
                       .from('services')
                       .delete()
                       .eq('id', service.id);
-                  ref.refresh(_servicesProvider);
+                  ref.invalidate(_servicesProvider);
                 },
                 child: Card(
                   margin: const EdgeInsets.only(bottom: 12),
@@ -147,7 +147,7 @@ class ServicesScreen extends ConsumerWidget {
       ),
       builder: (_) => _ServiceFormSheet(existing: existing, ref: ref),
     );
-    ref.refresh(_servicesProvider);
+    ref.invalidate(_servicesProvider);
   }
 }
 

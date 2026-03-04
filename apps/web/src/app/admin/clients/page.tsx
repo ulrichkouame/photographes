@@ -1,8 +1,8 @@
-import { createClient } from '@/lib/supabase/server'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow
 } from '@/components/ui/table'
+import { createClient } from '@/lib/supabase/server'
 
 export default async function AdminClientsPage() {
   const supabase = await createClient()

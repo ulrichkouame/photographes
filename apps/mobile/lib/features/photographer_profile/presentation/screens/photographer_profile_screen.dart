@@ -9,7 +9,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/constants/app_constants.dart';
-import '../../../../core/router/app_router.dart';
 import '../../data/profile_repository.dart';
 import '../../domain/portfolio_photo_model.dart';
 import '../../domain/review_model.dart';

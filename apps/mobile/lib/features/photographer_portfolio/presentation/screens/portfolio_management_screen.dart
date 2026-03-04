@@ -57,7 +57,7 @@ class _PortfolioManagementScreenState
       await ref
           .read(_portfolioMgmtRepoProvider)
           .uploadPhoto(File(picked.path));
-      ref.refresh(_myPhotosProvider);
+      ref.invalidate(_myPhotosProvider);
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -90,7 +90,7 @@ class _PortfolioManagementScreenState
       await ref
           .read(_portfolioMgmtRepoProvider)
           .deletePhoto(photo.id, photo.url);
-      ref.refresh(_myPhotosProvider);
+      ref.invalidate(_myPhotosProvider);
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -104,7 +104,7 @@ class _PortfolioManagementScreenState
           photo.id,
           isFeatured: !photo.isFeatured,
         );
-    ref.refresh(_myPhotosProvider);
+    ref.invalidate(_myPhotosProvider);
   }
 
   @override
@@ -171,13 +171,16 @@ class _PortfolioManagementScreenState
                         ),
                       )
                     : ReorderableBuilder(
-                        onReorder: (reorderFunc) {
-                          final reordered =
-                              reorderFunc(photos).cast<PortfolioPhoto>();
+                        onReorder: (orderEntities) {
+                          var reordered = List<PortfolioPhoto>.from(photos);
+                          for (final entity in orderEntities) {
+                            final item = reordered.removeAt(entity.oldIndex);
+                            reordered.insert(entity.newIndex, item);
+                          }
                           ref
                               .read(_portfolioMgmtRepoProvider)
                               .reorder(reordered);
-                          ref.refresh(_myPhotosProvider);
+                          ref.invalidate(_myPhotosProvider);
                         },
                         builder: (children) => GridView(
                           padding: const EdgeInsets.all(8),

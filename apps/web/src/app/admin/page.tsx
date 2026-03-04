@@ -1,9 +1,9 @@
-import { createClient } from '@/lib/supabase/server'
-import { StatsCard } from '@/components/admin/StatsCard'
 import { AnalyticsChart } from '@/components/admin/AnalyticsChart'
 import { PaymentsTable } from '@/components/admin/PaymentsTable'
-import { Camera, Users, CreditCard, CalendarCheck } from 'lucide-react'
+import { StatsCard } from '@/components/admin/StatsCard'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { createClient } from '@/lib/supabase/server'
+import { CalendarCheck, Camera, CreditCard, Users } from 'lucide-react'
 
 export default async function AdminDashboardPage() {
   const supabase = await createClient()
@@ -33,10 +33,10 @@ export default async function AdminDashboardPage() {
 
   const MONTH_LABELS = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc']
   const revenueByMonth: Record<string, number> = {}
-  ;(allPayments ?? []).forEach((p) => {
-    const month = MONTH_LABELS[new Date(p.created_at).getMonth()]
-    revenueByMonth[month] = (revenueByMonth[month] ?? 0) + (p.amount ?? 0)
-  })
+    ; (allPayments ?? []).forEach((p) => {
+      const month = MONTH_LABELS[new Date(p.created_at).getMonth()]
+      revenueByMonth[month] = (revenueByMonth[month] ?? 0) + (p.amount ?? 0)
+    })
   const revenueData = Object.entries(revenueByMonth).map(([label, value]) => ({ label, value }))
 
   return (

@@ -405,9 +405,6 @@ export type Database = {
   };
 };
 
-/** Helper pour typer le client Supabase avec la base Photographes.ci. */
-export type SupabaseClient = import('@supabase/supabase-js').SupabaseClient<Database>;
-
 /** Helper pour extraire le type d'une ligne de table. */
 export type TableRow<T extends keyof Database['public']['Tables']> =
   Database['public']['Tables'][T]['Row'];

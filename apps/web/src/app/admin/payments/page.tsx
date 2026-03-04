@@ -1,6 +1,6 @@
-import { createClient } from '@/lib/supabase/server'
 import { PaymentsTable } from '@/components/admin/PaymentsTable'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { createClient } from '@/lib/supabase/server'
 
 export default async function AdminPaymentsPage() {
   const supabase = await createClient()
