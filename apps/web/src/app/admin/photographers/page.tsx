@@ -17,7 +17,7 @@ export default function AdminPhotographersPage() {
   const loadPhotographers = useCallback(async () => {
     const supabase = createClient()
     setLoading(true)
-    let query = supabase.from('photographes_photographers').select('*').order('created_at', { ascending: false })
+    let query = supabase.from('photographer_profiles').select('*').order('created_at', { ascending: false })
     if (search) query = query.ilike('name', `%${search}%`)
     const { data } = await query
     setPhotographers(data ?? [])
@@ -28,7 +28,7 @@ export default function AdminPhotographersPage() {
 
   const handleToggleFeatured = async (id: string, value: boolean) => {
     const supabase = createClient()
-    await supabase.from('photographes_photographers').update({ featured: value }).eq('id', id)
+    await supabase.from('photographers').update({ is_featured: value }).eq('id', id)
     toast.success(value ? 'Mis en vedette' : 'Retiré de la vedette')
     loadPhotographers()
   }
@@ -36,7 +36,7 @@ export default function AdminPhotographersPage() {
   const handleDelete = async (id: string) => {
     if (!confirm('Supprimer ce photographe ?')) return
     const supabase = createClient()
-    await supabase.from('photographes_photographers').delete().eq('id', id)
+    await supabase.from('photographers').delete().eq('id', id)
     toast.success('Photographe supprimé')
     loadPhotographers()
   }

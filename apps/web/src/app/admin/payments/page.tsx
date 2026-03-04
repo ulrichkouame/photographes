@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 export default async function AdminPaymentsPage() {
   const supabase = await createClient()
   const { data: payments } = await supabase
-    .from('photographes_payments')
+    .from('payments')
     .select('*')
     .order('created_at', { ascending: false })
 

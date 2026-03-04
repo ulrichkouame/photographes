@@ -14,27 +14,37 @@ export async function GET(req: NextRequest) {
   const search = searchParams.get('search')
   const offset = (page - 1) * limit
 
+  const budgetMin = searchParams.get('budget_min')
+  const budgetMax = searchParams.get('budget_max')
+
+  // Utilise la vue photographer_profiles qui agrège profil + note moyenne + compteurs
   let query = supabase
-    .from('photographes_photographers')
+    .from('photographer_profiles')
     .select('*', { count: 'exact' })
 
   if (search) {
-    query = query.or(`name.ilike.%${search}%,bio.ilike.%${search}%`)
+    query = query.or(`full_name.ilike.%${search}%,bio.ilike.%${search}%`)
   }
   if (category) {
-    query = query.contains('categories', [category])
+    query = query.contains('specialties', [category])
   }
   if (commune) {
-    query = query.eq('commune', commune)
+    query = query.eq('city', commune)
   }
   if (minRating) {
-    query = query.gte('rating', parseFloat(minRating))
+    query = query.gte('avg_rating', parseFloat(minRating))
   }
   if (available === 'true') {
-    query = query.eq('available', true)
+    query = query.eq('is_available', true)
+  }
+  if (budgetMin) {
+    query = query.gte('price_per_hour', parseFloat(budgetMin))
+  }
+  if (budgetMax) {
+    query = query.lte('price_per_hour', parseFloat(budgetMax))
   }
 
-  query = query.range(offset, offset + limit - 1).order('featured', { ascending: false }).order('rating', { ascending: false })
+  query = query.range(offset, offset + limit - 1).order('avg_rating', { ascending: false })
 
   const { data, error, count } = await query
 

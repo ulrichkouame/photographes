@@ -6,7 +6,7 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const photographerId = searchParams.get('photographer_id')
 
-  let query = supabase.from('photographes_portfolio').select('*').order('featured', { ascending: false }).order('created_at', { ascending: false })
+  let query = supabase.from('portfolio_photos').select('*').order('sort_order', { ascending: true }).order('created_at', { ascending: false })
 
   if (photographerId) {
     query = query.eq('photographer_id', photographerId)
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
 
   const body = await req.json()
   const { data, error } = await supabase
-    .from('photographes_portfolio')
+    .from('portfolio_photos')
     .insert(body)
     .select()
     .single()
@@ -42,7 +42,7 @@ export async function DELETE(req: NextRequest) {
   const id = searchParams.get('id')
   if (!id) return NextResponse.json({ error: 'ID requis' }, { status: 400 })
 
-  const { error } = await supabase.from('photographes_portfolio').delete().eq('id', id)
+  const { error } = await supabase.from('portfolio_photos').delete().eq('id', id)
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   return NextResponse.json({ success: true })
 }

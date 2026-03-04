@@ -16,19 +16,20 @@ export default async function PhotographerProfilePage({ params }: Props) {
   const { slug } = await params
   const supabase = await createClient()
 
+  // Recherche par id OU par slug (nom converti en slug)
   const { data: photographer } = await supabase
-    .from('photographes_photographers')
+    .from('photographer_profiles')
     .select('*')
-    .eq('id', slug)
+    .or(`id.eq.${slug},full_name.ilike.${slug.replace(/-/g, ' ')}`)
     .single()
 
   if (!photographer) notFound()
 
   const { data: portfolio } = await supabase
-    .from('photographes_portfolio')
+    .from('portfolio_photos')
     .select('*')
     .eq('photographer_id', photographer.id)
-    .order('featured', { ascending: false })
+    .order('sort_order', { ascending: true })
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -55,32 +56,32 @@ export default async function PhotographerProfilePage({ params }: Props) {
           {/* Info */}
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-8">
             <div>
-              <h1 className="text-3xl font-bold mb-2">{photographer.name}</h1>
+              <h1 className="text-3xl font-bold mb-2">{photographer.full_name ?? 'Photographe'}</h1>
               <div className="flex flex-wrap items-center gap-3 mb-3">
-                {photographer.commune && (
+                {photographer.city && (
                   <span className="text-muted-foreground flex items-center gap-1 text-sm">
                     <MapPin className="h-4 w-4" />
-                    {photographer.commune}
+                    {photographer.city}
                   </span>
                 )}
                 <span className="flex items-center gap-1 text-sm font-medium">
                   <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                  {photographer.rating.toFixed(1)}
+                  {(photographer.avg_rating ?? 0).toFixed(1)}
                 </span>
-                {photographer.available ? (
+                {photographer.is_available ? (
                   <Badge variant="success">Disponible</Badge>
                 ) : (
                   <Badge variant="secondary">Indisponible</Badge>
                 )}
               </div>
               <div className="flex flex-wrap gap-2">
-                {photographer.categories?.map((cat: string) => (
+                {photographer.specialties?.map((cat: string) => (
                   <Badge key={cat} variant="outline">{cat}</Badge>
                 ))}
               </div>
             </div>
             <Button size="lg" disabled={!photographer.available}>
-              {photographer.available ? 'Réserver maintenant' : 'Indisponible'}
+              {photographer.is_available ? 'Réserver maintenant' : 'Indisponible'}
             </Button>
           </div>
 

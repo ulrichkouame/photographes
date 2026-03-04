@@ -9,7 +9,7 @@ import {
 export default async function AdminModerationPage() {
   const supabase = await createClient()
   const { data: photographers } = await supabase
-    .from('photographes_photographers')
+    .from('photographer_profiles')
     .select('*')
     .eq('available', false)
     .order('created_at', { ascending: false })

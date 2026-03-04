@@ -14,22 +14,30 @@ export default async function AdminDashboardPage() {
     { count: bookingsCount },
     { data: payments },
   ] = await Promise.all([
-    supabase.from('photographes_photographers').select('*', { count: 'exact', head: true }),
-    supabase.from('photographes_clients').select('*', { count: 'exact', head: true }),
-    supabase.from('photographes_bookings').select('*', { count: 'exact', head: true }),
-    supabase.from('photographes_payments').select('*').eq('status', 'completed').limit(5).order('created_at', { ascending: false }),
+    supabase.from('photographers').select('*', { count: 'exact', head: true }),
+    supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'client'),
+    supabase.from('bookings').select('*', { count: 'exact', head: true }),
+    supabase.from('payments').select('id,amount,created_at,status,operator').eq('status', 'completed').order('created_at', { ascending: false }).limit(5),
   ])
 
   const totalRevenue = (payments ?? []).reduce((sum, p) => sum + (p.amount ?? 0), 0)
 
-  const revenueData = [
-    { label: 'Jan', value: 1200000 },
-    { label: 'Fév', value: 1500000 },
-    { label: 'Mar', value: 1800000 },
-    { label: 'Avr', value: 1400000 },
-    { label: 'Mai', value: 2100000 },
-    { label: 'Jun', value: 2400000 },
-  ]
+  // Revenus des 6 derniers mois, calculés depuis les paiements réels
+  const sixMonthsAgo = new Date()
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6)
+  const { data: allPayments } = await supabase
+    .from('payments')
+    .select('amount,created_at')
+    .eq('status', 'completed')
+    .gte('created_at', sixMonthsAgo.toISOString())
+
+  const MONTH_LABELS = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc']
+  const revenueByMonth: Record<string, number> = {}
+  ;(allPayments ?? []).forEach((p) => {
+    const month = MONTH_LABELS[new Date(p.created_at).getMonth()]
+    revenueByMonth[month] = (revenueByMonth[month] ?? 0) + (p.amount ?? 0)
+  })
+  const revenueData = Object.entries(revenueByMonth).map(([label, value]) => ({ label, value }))
 
   return (
     <div className="space-y-8">

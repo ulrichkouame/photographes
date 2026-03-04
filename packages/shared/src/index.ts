@@ -1,37 +1,20 @@
-// Types partagés entre les applications web et mobile (via codegen)
+/**
+ * @photographes/shared
+ * Types TypeScript partagés entre apps/web et toute intégration TS.
+ * Alignés sur le schéma Supabase et les modèles Flutter.
+ */
 
-export type UserRole = 'client' | 'photographer' | 'admin';
+// ─── Enums & constantes ───────────────────────────────────────────────────────
+export * from './enums';
 
-export type BookingStatus = 'pending' | 'confirmed' | 'cancelled' | 'completed';
+// ─── Modèles de domaine ───────────────────────────────────────────────────────
+export * from './models';
 
-export interface Profile {
-  id: string;
-  full_name: string | null;
-  avatar_url: string | null;
-  role: UserRole;
-  created_at: string;
-  updated_at: string;
-}
+// ─── Types de la base de données (style Supabase) ────────────────────────────
+export * from './database.types';
 
-export interface Photographer {
-  id: string;
-  profile_id: string;
-  bio: string | null;
-  city: string | null;
-  specialties: string[] | null;
-  price_per_hour: number | null;
-  is_available: boolean;
-  created_at: string;
-}
+// ─── Types API (requêtes / réponses Edge Functions) ──────────────────────────
+export * from './api';
 
-export interface Booking {
-  id: string;
-  client_id: string | null;
-  photographer_id: string | null;
-  event_date: string;
-  duration_hours: number;
-  status: BookingStatus;
-  total_price: number | null;
-  notes: string | null;
-  created_at: string;
-}
+// ─── Utilitaires de types ────────────────────────────────────────────────────
+export * from './utils';
